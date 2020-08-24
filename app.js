@@ -7,6 +7,10 @@ const path = require("path");
 const PORT = 8000;
 const app = express();
 
+// Controllers
+const errorController = require("./controller/errorController");
+const adminController = require("./controller/adminContreller");
+
 
 // Middleware
 /*Підключення шаблонізатора */
@@ -17,5 +21,7 @@ app.use(bodyParser.urlencoded({ extended: false })); /*тут треба поя�
 // Підключення папки static де зберігаються шрифти,css і т.п.
 app.use(express.static(path.join(__dirname, "static")));
 
+/*Middleware for 404 Page not found */
+app.use(errorController.get404);
 
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
