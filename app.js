@@ -12,7 +12,13 @@ const errorController = require("./controller/errorController");
 const adminController = require("./controller/adminContreller");
 
 
-// Middleware
+// Routes middleware
+const mainRoutes = require("./routes/mainRoutes");
+
+app.use(mainRoutes);
+
+
+
 /*Підключення шаблонізатора */
 app.set("view engine", "ejs");
 app.set("views", "views");/*тут треба пояснення */
