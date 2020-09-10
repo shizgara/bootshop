@@ -28,7 +28,7 @@ app.use(bodyParser.urlencoded({ extended: false })); /*тут треба поя�
 app.use(express.static(path.join(__dirname, "static")));
 
 /*Middleware for 404 Page not found */
-// app.use(errorController.get404);
+app.use(errorController.get404);
 
 sequalize
   .sync()
