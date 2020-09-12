@@ -19,8 +19,6 @@ pipeline  {
                 }
             }
         }
-        /* stage за допомогою якого jenkins авторизовується на dockerHub. credentialsId - по назві цього ID Jenkins
-        шукає в Manage Credentials(в настройках jenkinsa) credential де зберігається логін і пароль до dockerHuba */
         stage("docker login") {
             steps {
                 echo " ============== docker login =================="
@@ -31,8 +29,6 @@ pipeline  {
                 }
             }
         }
-        /*Даний stage пушить image на dockerhub з назвою bootshop. Помітка latest вказує що якщо зявиться новіший image то його
-        запушить на dockerhub  */
         stage("docker push") {
             steps {
                 echo " ============== pushing image =================="
@@ -41,7 +37,6 @@ pipeline  {
                 '''
              }
         }
-        /* Зупиняє контейнер під назвою bootshop*/
         stage("docker stop") {
             steps {
                 echo " ============== stoping all images =================="
@@ -50,7 +45,6 @@ pipeline  {
                 '''
             }
         } 
-        /* Видаляє контейнер bootshop*/
         stage("docker remove") {
             steps {
                 echo " ============== removing all docker containers =================="
@@ -59,8 +53,6 @@ pipeline  {
                 '''
             }
         }
-        /*Запускає новий контейнер з ключем -d(в режимі demon),--restart=always(завжди автозапуск) з імям  bootshop
-        Контейнер доступний по зовнішньому порту 80, а внутрішній порт контейнера 8080  і шлях до image на dockerHub */
         stage("docker run") {
             steps {
                 echo " ============== starting chatterbox server =================="
