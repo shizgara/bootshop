@@ -1,6 +1,6 @@
 FROM node:latest
  
-MAINTAINER macnaer
+MAINTAINER shizgara
  
 WORKDIR /var/www
 COPY . /var/www

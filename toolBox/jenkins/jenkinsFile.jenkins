@@ -19,48 +19,56 @@ pipeline  {
                 }
             }
         }
-        // stage("docker login") {
-        //     steps {
-        //         echo " ============== docker login =================="
-        //         withCredentials([usernamePassword(credentialsId: 'DockerHub-Credentials', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-        //             sh '''
-        //             docker login -u $USERNAME -p $PASSWORD
-        //             '''
-        //         }
-        //     }
-        // }
-        // stage("docker push") {
-        //     steps {
-        //         echo " ============== pushing image =================="
-        //         sh '''
-        //         docker push macnaer/bootshop:latest
-        //         '''
-        //      }
-        // }
-        // stage("docker stop") {
-        //     steps {
-        //         echo " ============== stoping all images =================="
-        //         sh '''
-        //         docker stop bootshop
-        //         '''
-        //     }
-        // } 
-        // stage("docker remove") {
-        //     steps {
-        //         echo " ============== removing all docker containers =================="
-        //         sh '''
-        //         docker rm bootshop
-        //         '''
-        //     }
-        // }
-        // stage("docker run") {
-        //     steps {
-        //         echo " ============== starting chatterbox server =================="
-        //         sh '''
-        //         docker run -d --restart=always --name bootshop -p 80:8000 macnaer/bootshop
-        //         '''
-        //     }
-        // }
+        /* stage за допомогою якого jenkins авторизовується на dockerHub. credentialsId - по назві цього ID Jenkins
+        шукає в Manage Credentials(в настройках jenkinsa) credential де зберігається логін і пароль до dockerHuba */
+        stage("docker login") {
+            steps {
+                echo " ============== docker login =================="
+                withCredentials([usernamePassword(credentialsId: 'DockerHub-Credentials', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+                    sh '''
+                    docker login -u $USERNAME -p $PASSWORD
+                    '''
+                }
+            }
+        }
+        /*Даний stage пушить image на dockerhub з назвою bootshop. Помітка latest вказує що якщо зявиться новіший image то його
+        запушить на dockerhub  */
+        stage("docker push") {
+            steps {
+                echo " ============== pushing image =================="
+                sh '''
+                docker push shizgara/bootshop:latest
+                '''
+             }
+        }
+        /* Зупиняє контейнер під назвою bootshop*/
+        stage("docker stop") {
+            steps {
+                echo " ============== stoping all images =================="
+                sh '''
+                docker stop bootshop
+                '''
+            }
+        } 
+        /* Видаляє контейнер bootshop*/
+        stage("docker remove") {
+            steps {
+                echo " ============== removing all docker containers =================="
+                sh '''
+                docker rm bootshop
+                '''
+            }
+        }
+        /*Запускає новий контейнер з ключем -d(в режимі demon),--restart=always(завжди автозапуск) з імям  bootshop
+        Контейнер доступний по зовнішньому порту 80, а внутрішній порт контейнера 8080  і шлях до image на dockerHub */
+        stage("docker run") {
+            steps {
+                echo " ============== starting chatterbox server =================="
+                sh '''
+                docker run -d --restart=always --name bootshop -p 80:8000 shizara/bootshop
+                '''
+            }
+        }
 
     }
 }
