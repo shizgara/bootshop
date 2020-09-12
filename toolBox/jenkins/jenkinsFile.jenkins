@@ -15,20 +15,20 @@ pipeline  {
             steps {
                 echo 'Creating docker image ...'
                 dir('.'){
-                    sh "docker build -t macnaer/bootshop . "
+                    sh "docker build -t shizgara/bootshop . "
                 }
             }
         }
-        // stage("docker login") {
-        //     steps {
-        //         echo " ============== docker login =================="
-        //         withCredentials([usernamePassword(credentialsId: 'DockerHub-Credentials', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-        //             sh '''
-        //             docker login -u $USERNAME -p $PASSWORD
-        //             '''
-        //         }
-        //     }
-        // }
+        stage("docker login") {
+            steps {
+                echo " ============== docker login =================="
+                withCredentials([usernamePassword(credentialsId: 'DockerHub-Credentials', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+                    sh '''
+                    docker login -u $USERNAME -p $PASSWORD
+                    '''
+                }
+            }
+        }
         // stage("docker push") {
         //     steps {
         //         echo " ============== pushing image =================="
