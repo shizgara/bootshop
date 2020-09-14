@@ -9,15 +9,13 @@ const app = express();
 
 // Controllers
 const errorController = require("./controller/errorController");
-const adminController = require("./controller/adminContreller");
+// const adminController = require("./controller/adminContreller");
 
 //Include sequalize
 const sequalize = require("./helper/database");
 
 // Routes middleware
 const mainRoutes = require("./routes/mainRoutes");
-
-app.use(mainRoutes);
 
 /*Підключення шаблонізатора */
 app.set("view engine", "ejs");
@@ -27,16 +25,17 @@ app.use(bodyParser.urlencoded({ extended: false })); /*тут треба поя�
 // Підключення папки static де зберігаються шрифти,css і т.п.
 app.use(express.static(path.join(__dirname, "static")));
 
+app.use(mainRoutes);
+
 /*Middleware for 404 Page not found */
 app.use(errorController.get404);
-
 
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 
 // sequalize
 //   .sync()
 //   .then((connectionResult) => {
-//     // console.log("connectionResult ==>>",connectionResult);
+//     console.log("connectionResult ==>>",connectionResult);
 //     app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 //   })
 //   .catch((err) => console.log(err));
