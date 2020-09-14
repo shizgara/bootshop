@@ -30,10 +30,13 @@ app.use(express.static(path.join(__dirname, "static")));
 /*Middleware for 404 Page not found */
 app.use(errorController.get404);
 
-sequalize
-  .sync()
-  .then((connectionResult) => {
-    // console.log("connectionResult ==>>",connectionResult);
-    app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
-  })
-  .catch((err) => console.log(err));
+
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
+// sequalize
+//   .sync()
+//   .then((connectionResult) => {
+//     // console.log("connectionResult ==>>",connectionResult);
+//     app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+//   })
+//   .catch((err) => console.log(err));

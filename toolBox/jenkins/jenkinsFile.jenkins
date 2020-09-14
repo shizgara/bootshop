@@ -15,7 +15,9 @@ pipeline  {
             steps {
                 echo 'Creating docker image ...'
                 dir('.'){
-                    sh "docker build -t shizgara/bootshop . "
+                    // тут ми сворюємо імідж і поміщаємо його в свій докерхаб shizgara з назвою bootshop. Ключ -t ми вказуємо імя.
+                    // Крапка після bootshop вказує шлях до dockerfile
+                     sh "docker build -t shizgara/bootshop . "
                 }
             }
         }
