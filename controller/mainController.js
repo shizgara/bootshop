@@ -1,3 +1,4 @@
+/*Піключили модель */
 const product = require("../models/product");
 
 exports.getHomePage = (req, res, next) => {
