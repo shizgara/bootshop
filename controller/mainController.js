@@ -6,8 +6,8 @@ exports.getHomePage = (req, res, next) => {
     .then((products) => {
       res.render("pages/home", {
         products: products,
-        // pageTitle: "All products",
-        // path: "pages/home",
+        pageTitle: "All products",
+        path: "pages/home",
       });
     })
     .catch((err) => console.log(err));
