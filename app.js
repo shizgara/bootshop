@@ -16,21 +16,27 @@ const sequalize = require("./helper/database");
 
 // Routes middleware
 const mainRoutes = require("./routes/mainRoutes");
+const adminRoutes = require("./routes/adminRoutes")
 
 /*Підключення шаблонізатора */
 app.set("view engine", "ejs");
 app.set("views", "views"); /*тут треба пояснення */
 app.use(bodyParser.urlencoded({ extended: false })); /*тут треба пояснення */
 
-// Підключення папки static де зберігаються шрифти,css і т.п.
+// Підключення папки static де зберігаються шрифти,css і т.п. і для адмінки також
 app.use(express.static(path.join(__dirname, "static")));
+app.use("/admin", express.static(__dirname + "/static"));
+app.use("/product_detail",express.static(path.join(__dirname, "static")));
+
+
 
 app.use(mainRoutes);
+app.use(adminRoutes);
 
 /*Middleware for 404 Page not found */
 app.use(errorController.get404);
 
-// app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
 
 sequalize
   .sync()

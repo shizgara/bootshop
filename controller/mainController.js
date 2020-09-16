@@ -51,15 +51,34 @@ exports.getLoginPage = (req, res, next) => {
 };
 
 exports.getProductDetailPage = (req, res, next) => {
-  res.render("pages/product_detail");
+  const productID = req.params.id;
+  product.findByPk(productID)
+  .then((products) => {
+    res.render("pages/product_detail", {
+      products: products,
+      // pageTitle: "All products",
+      // path: "pages/product_detail",
+    });
+  })
+    .catch((err) => console.log(err));
 };
+
 
 exports.getProductSummaryPage = (req, res, next) => {
   res.render("pages/product_summary");
 };
 
 exports.getProductsPage = (req, res, next) => {
-  res.render("pages/products");
+  product
+    .findAll()
+    .then((products) => {
+      res.render("pages/products", {
+        products: products,
+        pageTitle: "All products",
+        path: "pages/products",
+      });
+    })
+    .catch((err) => console.log(err));
 };
 
 exports.getRegisterPage = (req, res, next) => {

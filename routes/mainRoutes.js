@@ -13,7 +13,7 @@ router.get("/components", mainController.getComponentsPage);
 router.get("/forgetpass", mainController.getForgetPassPage);
 router.get("/legal_notice", mainController.getLegalNoticePage);
 router.get("/login", mainController.getLoginPage);
-router.get("/product_detail", mainController.getProductDetailPage);
+router.get("/product_detail/:id", mainController.getProductDetailPage);
 router.get("/product_summary", mainController.getProductSummaryPage);
 router.get("/products", mainController.getProductsPage);
 router.get("/register", mainController.getRegisterPage);
