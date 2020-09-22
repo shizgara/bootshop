@@ -1,0 +1,72 @@
+<%- include('../layouts/header.ejs') %>
+
+<div id="mainBody">
+    <div class="container">
+        <div class="row">
+            <%- include('../admin/adminSidebar.ejs') %>
+   <div class="container">
+            <div class="row">
+                <div class="col-3">
+                    <div class="card">
+                           <div class="table-responsive">
+                            <table class="table no-wrap user-table mb-0">
+                              <thead>
+                                <tr>
+                                  <th scope="col" class="border-0 text-uppercase font-medium pl-4">#</th>
+                                  <th scope="col" class="border-0 text-uppercase font-medium">Name</th>
+                                  <th scope="col" class="border-0 text-uppercase font-medium">Password</th>
+                                  <th scope="col" class="border-0 text-uppercase font-medium">Email</th>
+                                  <th scope="col" class="border-0 text-uppercase font-medium">Added</th>
+                             </tr>
+                              </thead>
+                              <tbody>
+                                <tr>
+                                    <% if (user.length > 0) { %>
+                                        <% user.forEach( user => { %>
+                                  <td class="pl-4">1</td>
+                                  <td>
+                                      <h5 class="font-medium mb-0"><%= user.name %></h5>
+                                      
+                                  </td>
+                                  <td>
+                                      <span class="text-muted"><%= user.password %></span><br>
+                                      
+                                  </td>
+                                  <td>
+                                      <span class="text-muted"><%= user.email %></span><br>
+                                      
+                                  </td>
+                                  <td>
+                                      <span class="text-muted"><%= user.createdAt %></span><br>
+                                      
+                                  </td>
+                                  </tr>
+                                  <% }) %>
+                    <% } else { %>
+                        <h2>No users found.</h2>
+                    
+                    <% } %>
+                                 </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+
+
+
+
+
+
+
+
+
+
+
+        </div>
+    </div>
+</div>
+
+
+<%- include('../layouts/footer.ejs') %>

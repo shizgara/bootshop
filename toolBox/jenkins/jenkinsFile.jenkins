@@ -24,6 +24,8 @@ pipeline  {
         stage("docker login") {
             steps {
                 echo " ============== docker login =================="
+                //Тут прописані умови для авторизації на докерхаб. Додатково in jenkins in credentials ми створюємо умову для авторизації, тобто прописуємо
+                // в яких змінних зберігаються юезрнейм і пароль і т.п.
                 withCredentials([usernamePassword(credentialsId: 'DockerHub-Credentials', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
                     sh '''
                     docker login -u $USERNAME -p $PASSWORD
@@ -58,9 +60,11 @@ pipeline  {
         stage("docker run") {
             steps {
                 echo " ============== starting chatterbox server =================="
+                withCredentials([usernamePassword(credentialsId: 'DataBase-Credentials', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
                 sh '''
                 docker run -d --restart=always --name bootshop -p 80:8000 shizgara/bootshop
                 '''
+            }
             }
         }
 

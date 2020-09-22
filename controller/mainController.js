@@ -1,12 +1,12 @@
 /*Піключили модель */
-const product = require("../models/product");
+const productTable = require("../models/product");
 
 exports.getHomePage = (req, res, next) => {
-  product
+  productTable
     .findAll()
-    .then((products) => {
+    .then((dataproducts) => {
       res.render("pages/home", {
-        products: products,
+        products: dataproducts,
         pageTitle: "All products",
         path: "pages/home",
       });
@@ -52,28 +52,28 @@ exports.getLoginPage = (req, res, next) => {
 
 exports.getProductDetailPage = (req, res, next) => {
   const productID = req.params.id;
-  product.findByPk(productID)
-  .then((products) => {
-    res.render("pages/product_detail", {
-      products: products,
-      // pageTitle: "All products",
-      // path: "pages/product_detail",
-    });
-  })
+  productTable
+    .findByPk(productID)
+    .then((dataproducts) => {
+      res.render("pages/product_detail", {
+        products: dataproducts,
+        // pageTitle: "All products",
+        // path: "pages/product_detail",
+      });
+    })
     .catch((err) => console.log(err));
 };
-
 
 exports.getProductSummaryPage = (req, res, next) => {
   res.render("pages/product_summary");
 };
 
 exports.getProductsPage = (req, res, next) => {
-  product
+  productTable
     .findAll()
-    .then((products) => {
+    .then((dataproducts) => {
       res.render("pages/products", {
-        products: products,
+        products: dataproducts,
         pageTitle: "All products",
         path: "pages/products",
       });

@@ -2,7 +2,7 @@ const Sequelize = require("sequelize");
 const sequelize = require("../helper/database");
 
 /*define - означає що ми реєструємо якусь модель(таблицю) з назвою product і сворюємо поля,які будуть в таблиці */
-const product = sequelize.define("product", {
+const productTable = sequelize.define("productTable", {
   id: {
     type: Sequelize.INTEGER,
     autoIncrement: true,
@@ -14,7 +14,10 @@ const product = sequelize.define("product", {
     type: Sequelize.DOUBLE,
     allowNull: false,
   },
-  sale: Sequelize.DOUBLE,
+  sale: {
+    type: Sequelize.DOUBLE,
+    allowNull: true,
+  },
   imageUrl: {
     type: Sequelize.STRING,
     allowNull: false,
@@ -42,6 +45,7 @@ const product = sequelize.define("product", {
   },
   released: {
     type: Sequelize.DATE,
+    allowNull: true,
   },
   dimensions: {
     type: Sequelize.STRING,
@@ -51,8 +55,8 @@ const product = sequelize.define("product", {
     type: Sequelize.STRING,
   },
   features: {
-    type: Sequelize.STRING,
+    type: Sequelize.TEXT,
   },
 });
 
-module.exports = product;
+module.exports = productTable;
