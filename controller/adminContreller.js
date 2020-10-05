@@ -1,12 +1,10 @@
-const { promiseImpl } = require("ejs");
-const sequalize = require("sequelize");
-const productTable = require("../models/product");
+// const { promiseImpl } = require("ejs");
+// const sequalize = require("sequelize");
+const product = require("../models/product");
 const users = require("../models/users");
 
-
-
 exports.getProducts = (req, res, next) => {
-  productTable
+  product
     /*findAll() - метод sequalize, який зчитує дані всієї таблиці */
     .findAll()
     .then((dataproducts) => {
@@ -23,7 +21,7 @@ exports.getProducts = (req, res, next) => {
 exports.deleteProduct = (req, res, next) => {
   // console.log("Наші параметри ====>>>>>>",req.params);
   const productID = req.params.id;
-  productTable
+  product
     .findByPk(productID)
     .then((dataproduct) => {
       /*Метод destroy() - видаляє курс */
@@ -42,7 +40,7 @@ exports.addProductGet = (req, res, next) => {
 
 /*Метод відловлює дані для додавання курсу */
 exports.addProductPost = (req, res, next) => {
-  console.log("addpost logs==========>>>>>>",req);
+  console.log("addpost logs==========>>>>>>", req);
   const title = req.body.title;
   const price = req.body.price;
   const sale = req.body.sale;
@@ -58,8 +56,15 @@ exports.addProductPost = (req, res, next) => {
   const displaySize = req.body.displaySize;
   const features = req.body.features;
 
+  users.findByPk(1).then((data) => {
+    console.log("data from users====>>>>", data);
+    let userId = data.id;
+    console.log(userId)
+    return userId;
+  });
+  console.log('userId====>>>>',userId);
   /*За допомогою метода create передаємо в БД(Course) дані які ввів користувач в полях  */
-  productTable
+  product
     .create({
       title: title,
       price: price,
@@ -75,7 +80,7 @@ exports.addProductPost = (req, res, next) => {
       dimensions: dimensions,
       displaySize: displaySize,
       features: features,
-     
+      userId: userId,
     })
     .then((result) => {
       console.log("Add product result ==>>", result);
@@ -88,11 +93,12 @@ exports.addProductPost = (req, res, next) => {
 exports.getEditProduct = (req, res, next) => {
   console.log("Move to Edit Product Route");
   const id = req.params.id;
-  productTable
+  product
     .findByPk(id)
     .then((product) => {
       res.render("admin/edit_product", {
         product: product,
+        time: new Date(),
         // id: id,
         //path:'/products_edit/',
       });
@@ -101,7 +107,7 @@ exports.getEditProduct = (req, res, next) => {
 };
 
 exports.confirmEditProduct = (req, res, next) => {
-  console.log("Дані які прийшли з форми edit====>>>>",req.body);
+  console.log("Дані які прийшли з форми edit====>>>>", req.body);
   const title = req.body.title;
   const id = req.body.id;
   console.log("id---------->>>>>>>>>>>>>>", id);
@@ -119,10 +125,11 @@ exports.confirmEditProduct = (req, res, next) => {
   const displaySize = req.body.displaySize;
   const features = req.body.features;
 
-  /*За допомогою метода update передаємо(обновлюємо) в таблиці(productTable) дані які ввів користувач в полях  */
-  productTable
+  /*За допомогою метода update передаємо(обновлюємо) в таблиці(product) дані які ввів користувач в полях  */
+  product
     .update(
-      { title: title,
+      {
+        title: title,
         price: price,
         sale: sale,
         imageUrl: imageUrl,
@@ -137,7 +144,7 @@ exports.confirmEditProduct = (req, res, next) => {
         displaySize: displaySize,
         features: features,
       },
-      {where:{id: id,},}
+      { where: { id: id } }
     )
     .then((result) => {
       console.log("Update product result ==>>", result);
@@ -164,7 +171,7 @@ exports.getUsers = (req, res, next) => {
 
 exports.getProductDetailPage = (req, res, next) => {
   const productID = req.params.id;
-  productTable
+  product
     .findByPk(productID)
     .then((dataproducts) => {
       res.render("admin/admin_products_detail", {

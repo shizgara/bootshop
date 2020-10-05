@@ -40,13 +40,7 @@
               class="form-control"
               id="sale"
               name="sale"
-              value='
-              <%console.log("SSSSSSSSSAAAAAAAAAAAAAAALLLLLLLLLLLLLEEEEEEEEEEE=================>>>>>>>>>>>>>",product.sale)%>
-              <% if(product.sale = null){%>
-              <%= product.sale = 0 %>
-              <% } else { %>
-                <%= product.sale = product.sale %>
-              <% } %>'
+              value='<%= product.sale%>'
               placeholder="Sale"
             >
           </div>
@@ -140,7 +134,8 @@
                 id="released"
                 aria-describedby="released"
                 name="released"
-                value='<%= product.released%>'
+                value='<%product.released%>>
+               
                 placeholder="Released"
               />
             </div>

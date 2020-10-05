@@ -7,10 +7,10 @@ const DBUSERNAME = process.env.DBUSERNAME;
 const DBPASSWORD = process.env.DBPASSWORD;
 const DATABASENAME = process.env.DATABASENAME;
 
-console.log("DataBase Host ==>>",DBHOST);
-console.log("DataBase Username ==>>",DBUSERNAME);
-console.log("DataBase Password ==>>",DBPASSWORD);
-console.log("DataBase Name ==>>",DATABASENAME);
+// console.log("DataBase Host ==>>",DBHOST);
+// console.log("DataBase Username ==>>",DBUSERNAME);
+// console.log("DataBase Password ==>>",DBPASSWORD);
+// console.log("DataBase Name ==>>",DATABASENAME);
 
 const sequalize = new Sequalize(DATABASENAME, DBPASSWORD, DBUSERNAME, {
   dialect: "mysql",

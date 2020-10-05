@@ -1,6 +1,8 @@
 const Sequalize = require("sequelize");
+
 const sequalize = require("../helper/database");
-const Cart = sequalize.define("cart", {
+
+const Order = sequalize.define("order", {
   id: {
     type: Sequalize.INTEGER,
     autoIncrement: true,
@@ -8,4 +10,5 @@ const Cart = sequalize.define("cart", {
     primaryKey: true,
   },
 });
-module.exports = Cart;
+
+module.exports = Order;  
