@@ -70,7 +70,7 @@ Order.belongsToMany(Product, { through: OrderItem });
 
 sequalize
   // sync синхронізує модель з базою
-  .sync({force:true})
+  .sync()
   .then((connectionRezult) => {
     return User.findByPk(1);
   })

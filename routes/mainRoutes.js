@@ -20,6 +20,7 @@ router.get("/products", mainController.getProductsPage);
 router.get("/register", mainController.getRegisterPage);
 router.get("/tac", mainController.getTACPage);
 router.get("/orders",mainController.getOrders);
+router.post("/make-order",mainController.postOrder);
 
 
 module.exports = router;

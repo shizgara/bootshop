@@ -8,14 +8,14 @@
 
             <div class="span9">
                 <ul class="breadcrumb">
-                    <li><a href="index.html">Home</a> <span class="divider">/</span></li>
-                    <li class="active"> SHOPPING CART</li>
+                    <li><a href="/">Home</a> <span class="divider">/</span></li>
+                    <li class="active"> Orders</li>
                 </ul>
-                <h3> SHOPPING CART [ <small>3 Item(s) </small>]<a href="/" class="btn btn-large pull-right"><i
-                            class="icon-arrow-left"></i> Continue Shopping </a></h3>
+                
                 <hr class="soft" />
 
                 <% if (orders.length > 0) { %>
+                
                 <table class="table table-bordered">
                     <thead>
                         <tr>
@@ -27,19 +27,35 @@
                             <th>Total</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <td colspan="6" style="text-align:right"><strong>TOTAL =</strong></td>
-                        <td class="label label-important" style="display:block"> <strong> $155.00 </strong></td>
-                        </tr>
-                    </tbody>
+                      
+                        <tbody>
+                             <% orders.forEach( order => { %>
+                             <% order.products.forEach( product => { %>
+                            <tr>
+                              <td> <img width="60" src="<%= product.imageUrl %>" alt=""/></td>
+                              <td><%= product.shortDescription%><br/>Color: <%= product.color %></td>
+                              <td>
+                                <div class="input-append"><input class="span1" style="max-width:34px" value="<%= product.quantity %>" placeholder="1" id="appendedInputButtons" size="16" type="text"><button class="btn" type="button"><i class="icon-minus"></i></button><button class="btn" type="button"><i class="icon-plus"></i></button><button class="btn btn-danger" type="button"><i class="icon-remove icon-white"></i></button>				</div>
+                              </td>
+                              <td><%= product.price %></td>
+                              <td><%= product.sale %></td>
+                              <td><%= (product.price - product.sale)*product.quantity %> </td>
+                            </tr>
+                            <tr>
+                                <td colspan="6" style="text-align:right"><strong>TOTAL =</strong></td>
+                                <td class="label label-important" style="display:block"> <strong><%= (product.price - product.sale)*product.quantity %></strong>
+                                </td>
+                            </tr>
+                            <%})%>
+                            <%})} else {%>
+                               
+                              <h2>No order found</h2>
+        <%}%>
+        
+                            </tbody>
                 </table>
-                <% } else { %>
-                <h2>No orders found.</h2>
-                <% } %>
-                <form action="/orders" method="POST">
-                    <button type="submit" class="btn btn-large pull-right">Order now <i
-                            class="fas fa-shopping-cart"></i></button>
-                </form>
+             
+                
 
 
             </div>

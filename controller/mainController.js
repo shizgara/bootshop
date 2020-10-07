@@ -144,11 +144,16 @@ exports.getTACPage = (req, res, next) => {
 };
 
 exports.getOrders = (req, res, next) => {
-  const user = req.user;
+  // const user = req.user;
   // console.log('req.user===>>>', user);
   req.user
     .getOrders({ include: ["products"] })
+    // .getOrders().then(orders=>{
+    //   console.log("orders===>>>",orders);
+    //   return orders.getProducts()
+    // })
     .then((orders) => {
+      console.log("orders===>>>",orders);
       res.render("pages/orders", {
         path: "/orders/",
         orders: orders,
@@ -162,22 +167,25 @@ exports.postOrder = (req, res, next) => {
   req.user
     .getCart()
     .then((cart) => {
-      currentCard = card;
+      currentCard = cart;
       // console.log("cart==>>",cart);
       return cart.getProducts()
       .then((products) => {
         // console.log("products in cart==>", products);
-        return req.user.createOrder();
-      }).then(order=>{
-        // console.log('current order==>>',order);
-        return order.addProducts(
-          products.map(products=>{
-            product.orderItem = {quantity : product.cartItem.quantity};
-            return product;
-          })
-        )
+        return req.user.createOrder().then(order=>{
+          // console.log('current order==>>',order);
+          return order.addProducts(
+            products.map(product=>{
+              product.orderItem = {quantity : product.cartItem.quantity};
+              return product;
+            })
+          )
+        });
       }).then(result=>{
-        res.redirect("/orders");
+        return currentCard.setProducts(null)// почистили корзину
+      })
+      .then(result=>{
+         res.redirect("/orders");
       })
     })
     .catch((err) => console.log(err));
