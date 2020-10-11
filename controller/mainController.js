@@ -1,10 +1,11 @@
 const Product = require("../models/product");
-/*Піключили модель */
-// const product = require("../models/product");
+const Order = require("../models/order");
 
 exports.getHomePage = (req, res, next) => {
+  // console.log("req==>>",req.isLoggedIn);
+  // console.log("REQ==>>",req);
   Product
-    .findAll()
+    .find()
     .then((dataproducts) => {
       res.render("pages/home", {
         products: dataproducts,
@@ -54,7 +55,7 @@ exports.getLoginPage = (req, res, next) => {
 exports.getProductDetailPage = (req, res, next) => {
   const productID = req.params.id;
   Product
-    .findByPk(productID)
+    .findById(productID)
     .then((dataproducts) => {
       res.render("pages/product_detail", {
         products: dataproducts,
@@ -66,60 +67,29 @@ exports.getProductDetailPage = (req, res, next) => {
 };
 
 exports.getCart = (req, res, next) => {
-  // console.log("req getCart => ", req.user);
   req.user
-    .getCart() //В таблиці Cart створився запис з привязкою по userId №1. Тобто створилась корзина яка привязана до юзера id 1
-    .then((cart) => {
-      // console.log("catr==========>>>>>>>>",cart);
-      return cart
-        .getProducts() //Через створену таблицю cart з привязкою до даного юзера(id 1) робиться запит в таблицю products, щоб по привязкам визначити які продукти лежать в корзині даного користувача
-        .then((products) => {
-          // console.log('porudct in cart===>>>',products)
-          res.render("pages/product_summary", {
-            path: "/product_summary",
-            products: products,
-          });
-        });
-    })
-    .catch((err) => console.log(err));
+  .populate("cart.items.productId")
+  .execPopulate()
+  .then((user) => {
+    const products = user.cart.items;
+    res.render("pages/product_summary", {
+      path: "/product_summary",
+      product: products,
+    });
+  })
+  .catch((err) => console.log(err));
 };
 
 exports.postCart = (req, res, next) => {
-  const productId = req.body.productId;
-  let newQuantity = 1;
-  let currentCart;
-  req.user
-    .getCart()//Юзера привязали до його корзини 
-    .then((cart) => {
-      // console.log('postCart===>>>', cart)
-      currentCart = cart;
-      // console.log('currentCart====>>>', currentCart);
-      return cart.getProducts({ where: { id: productId } });//Достає дані про продукт який лежить в таблиці cartItem по звязкам і id продукта
-    })
-    .then(([product]) => {
-      // console.log('products===>>>',product)
-      if (product) {
-        const oldQuantity = product.cartItem.quantity;
-        newQuantity = oldQuantity + 1;
-        return product;
-    }
-      return Product.findByPk(productId);
-    })
+  const prodId = req.body.productId;
+  Product.findById(prodId)
     .then((product) => {
-      console.log("postCart => product => ", product);
-      return currentCart.addProduct(product, {
-        through: { quantity: newQuantity },
-      });
+      return req.user.addToCart(product);
     })
-    .then(() => {
-      req.user
-          .getCart()
-          .then((cart) => {
-              res.redirect('/product_summary');
-          })
-          .catch((err) => console.log(err));
-  })
-    .catch((err) => console.log(err));
+    .then((result) => {
+      console.log(result);
+      res.redirect("/cart");
+    });
 };
 
 exports.getProductsPage = (req, res, next) => {
@@ -144,13 +114,11 @@ exports.getTACPage = (req, res, next) => {
 };
 
 exports.getOrders = (req, res, next) => {
-  const user = req.user;
-  // console.log('req.user===>>>', user);
-  req.user
-    .getOrders({ include: ["products"] })
+  Order.find({ "user.userId": req.user._id })
     .then((orders) => {
       res.render("pages/orders", {
-        path: "/orders/",
+        path: "/orders",
+        pageTitle: "Your Orders",
         orders: orders,
       });
     })
@@ -158,27 +126,37 @@ exports.getOrders = (req, res, next) => {
 };
 
 exports.postOrder = (req, res, next) => {
-  let currentCard;
   req.user
-    .getCart()
-    .then((cart) => {
-      currentCard = card;
-      // console.log("cart==>>",cart);
-      return cart.getProducts()
-      .then((products) => {
-        // console.log("products in cart==>", products);
-        return req.user.createOrder();
-      }).then(order=>{
-        // console.log('current order==>>',order);
-        return order.addProducts(
-          products.map(products=>{
-            product.orderItem = {quantity : product.cartItem.quantity};
-            return product;
-          })
-        )
-      }).then(result=>{
-        res.redirect("/orders");
-      })
+    .populate("cart.items.productId")
+    .execPopulate()
+    .then((user) => {
+      const products = user.cart.items.map((i) => {
+        return { quantity: i.quantity, product: { ...i.productId._doc } };
+      });
+      const order = new Order({
+        user: {
+          name: req.user.name,
+          userId: req.user,
+        },
+        products: products,
+      });
+      return order.save();
+    })
+    .then((result) => {
+      return req.user.clearCart();
+    })
+    .then(() => {
+      res.redirect("/orders");
+    })
+    .catch((err) => console.log(err));
+};
+
+exports.postCartDeleteProduct = (req, res, next) => {
+  const prodId = req.body.productId;
+  req.user
+    .removeFromCart(prodId)
+    .then((result) => {
+      res.redirect("/cart");
     })
     .catch((err) => console.log(err));
 };

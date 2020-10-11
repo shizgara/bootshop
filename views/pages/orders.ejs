@@ -28,18 +28,33 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <td colspan="6" style="text-align:right"><strong>TOTAL =</strong></td>
-                        <td class="label label-important" style="display:block"> <strong> $155.00 </strong></td>
+                        <% orders.forEach(order => { %>
+                        <% order.products.forEach(product => { %>
+                        <tr>
+                            <td> <img width="60" src="<%= product.product.imageUrl %>"
+                                    alt="<%= product.product.title %>" />
+                            </td>
+                            <td><%= product.product.shortDescription %></td>
+                            <td>
+                                <div class="input-append"><input class="span1" style="max-width:34px"
+                                        value="<%= product.product.quantity %>" id="appendedInputButtons" size="16"
+                                        type="text">
+                                   
+                                </div>
+                            </td>
+                            <td><%= product.product.price %></td>
+                            <td><%= product.product.sale %></td>
+                            <td><%= product.product.sale * product.product.quantity %></td>
+                        </tr>
+                        <% }); %>
+                        <% }) %>
                         </tr>
                     </tbody>
                 </table>
                 <% } else { %>
                 <h2>No orders found.</h2>
                 <% } %>
-                <form action="/orders" method="POST">
-                    <button type="submit" class="btn btn-large pull-right">Order now <i
-                            class="fas fa-shopping-cart"></i></button>
-                </form>
+
 
 
             </div>
@@ -47,4 +62,4 @@
     </div>
 </div>
 <!-- MainBody End ============================= -->
-<%- include('../layouts/footer.ejs') %> 
+<%- include('../layouts/footer.ejs') %>

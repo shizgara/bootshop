@@ -2,49 +2,41 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const path = require("path");
+const mongoose = require("mongoose");
+const errorController = require("./controller/errorController");
+const session = require("express-session");
+
+// Include Models
+const User = require("./models/users");
+
+const {Username, Password} = require("./helper/database");
 
 /*Ініціалізація порта і обєкта(сервера) app */
 const PORT = 8000;
-const app = express();
-
-// Controllers
-const errorController = require("./controller/errorController");
-const adminController = require("./controller/adminContreller");
-
-//Include sequalize
-const sequalize = require("./helper/database");
-
-// Include Models
-const Product = require("./models/product");
-const User = require("./models/users");
-const Cart = require("./models/cart");
-const CartItem = require("./models/cartItem");
-const Order = require("./models/order");
-const OrderItem = require("./models/orderItem");
+const app = express(); 
 
 // Routes middleware
 const mainRoutes = require("./routes/mainRoutes");
 const adminRoutes = require("./routes/adminRoutes");
+const authRoutes = require("./routes/authRoutes");
 
 /*Підключення шаблонізатора */
 app.set("view engine", "ejs");
 app.set("views", "views");
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: false }));// для зчитування даних з body
 
 // Підключення папки static де зберігаються шрифти,css і т.п. і для адмінки також
 app.use(express.static(path.join(__dirname, "static")));
+app.use(session({secret:"my super secret", resave: false, saveUninitialized:false}));
 app.use("/admin", express.static(__dirname + "/static"));
 app.use("/product_detail", express.static(path.join(__dirname, "static")));
-app.use(
-  ["/admin/edit_product", "/admin/admin_products_detail"],
-  express.static(path.join(__dirname, "static"))
-);
+app.use(["/admin/edit_product", "/admin/admin_products_detail"],express.static(path.join(__dirname, "static")));
 
 /*Присвоюємо змінній req.user дані про юзера під id №1*/
 app.use((req, res, next) => {
-  User.findByPk(1)
+  User.findById('5f7ca7b149911536fcdcecd0')
     .then((user) => {
-      // console.log("user========================================>>>>",user);
+      // console.log("user==>>>>",user);
       req.user = user;
       next();
     })
@@ -53,50 +45,32 @@ app.use((req, res, next) => {
 
 //Routes
 app.use(mainRoutes);
+app.use(authRoutes);
 app.use("/admin", adminRoutes);
 /*Middleware for 404 Page not found */
 app.use(errorController.get404);
 
-// Relations
-Product.belongsTo(User, { constraints: true, onDelete: "CASCADE" });
-User.hasMany(Product);
-User.hasOne(Cart);
-Cart.belongsTo(User);
-Cart.belongsToMany(Product, { through: CartItem });
-Product.belongsToMany(Cart, { through: CartItem });
-Order.belongsTo(User);
-User.hasMany(Order);
-Order.belongsToMany(Product, { through: OrderItem });
-
-sequalize
-  // sync синхронізує модель з базою
-  .sync({force:true})
-  .then((connectionRezult) => {
-    return User.findByPk(1);
-  })
-  .then((user) => {
-    if (!user) {
-      const createUsers = require("./models/create_users");
-      return createUsers;
-    } else {
-      return user;
-    }
-  })
-  .then((user) => {
-    return user.createCart();
-  })
-  .then((data) => {
-    return Product.findByPk(1);
-  })
-  .then((product) => {
-    if (!product) {
-      const seedProducts = require("./models/seedProducts");
-      return seedProducts.createProduct() ;
-    } else {
-      return product;
-    }
-  })
-  .then((cart) => {
+/*Тут прописане підключення до бази через mongoose */
+mongoose
+  .connect(
+    `mongodb+srv://shizgara:shizgara123@cluster0.cvhh2.mongodb.net/Bootshop?retryWrites=true&w=majority`,//Тут вводять пароль,пасворд і назва бд
+    { useNewUrlParser: true, useUnifiedTopology: true }
+  )
+  .then((result) => {
+    User.findOne().then((user) => {
+      if (!user) {
+        const user = new User({
+          name: "master",
+          email: "master@gmail.com",
+          cart: {
+            items: [],
+          },
+        });
+        user.save();//Метод save() відправляє дані на Атлас
+      }
+    });
     app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
   })
-  .catch((err) => console.log("catch eroro=========>>>>>>>", err));
+  .catch((err) => {
+    console.log(err);
+  });

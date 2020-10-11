@@ -36,11 +36,10 @@
           <label for="price">Sale</label>
           <input
             type="number"
-            min="0"
             class="form-control"
-            id="Sale"
+            id="sale"
             aria-describedby="Sale"
-            name="Sale"
+            name="sale"
             placeholder="Знижка"
           />
         </div>
@@ -69,10 +68,10 @@
         </div>
         <div class="form-group">
           <label for="price">Color</label>
-          <select name="color">
-            <option value="Maroon">Black</option>
+          <select name="color" id="color">
+            <option value="Black">Black</option>
 
-            <option value="Green">White</option>
+            <option value="White">White</option>
 
             <option value="Yellow">Yellow</option>
 
@@ -80,7 +79,7 @@
 
             <option value="Red">Red</option>
 
-            <option value="White">Other</option>
+            <option value="Other">Other</option>
           </select>
         </div>
 
@@ -122,38 +121,7 @@
             placeholder="Модель"
           />
         </div>
-        <div class="form-group">
-          <label for="title">released</label>
-          <input
-            type="date"
-            class="form-control"
-            id="released"
-            name="released"
-            placeholder="Коли був випущений реліз даного продукту"
-          />
-        </div>
-        <div class="form-group">
-          <label for="title">dimensions</label>
-          <input
-            type="text"
-            class="form-control"
-            id="dimensions"
-            name="dimensions"
-            placeholder="Розміри(габарити)"
-          />
-        </div>
-        <div class="form-group">
-          <label for="title">displaySize</label>
-          <input
-            type="text"
-            class="form-control"
-            id="displaySize"
-            name="displaySize"
-            placeholder="Розмір дисплея"
-          />
-        </div>
-
-        <div class="form-group">
+         <div class="form-group">
           <label for="description">features</label>
           <textarea
             class="form-control"

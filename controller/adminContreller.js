@@ -1,12 +1,11 @@
 // const { promiseImpl } = require("ejs");
 // const sequalize = require("sequelize");
-const product = require("../models/product");
+const Product = require("../models/product");
 const users = require("../models/users");
 
 exports.getProducts = (req, res, next) => {
-  product
-    /*findAll() - метод sequalize, який зчитує дані всієї таблиці */
-    .findAll()
+  Product
+    .find()
     .then((dataproducts) => {
       // console.log("products ====>>>>", products)
       res.render("admin/products", {
@@ -21,17 +20,11 @@ exports.getProducts = (req, res, next) => {
 exports.deleteProduct = (req, res, next) => {
   // console.log("Наші параметри ====>>>>>>",req.params);
   const productID = req.params.id;
-  product
-    .findByPk(productID)
-    .then((dataproduct) => {
-      /*Метод destroy() - видаляє курс */
-      return dataproduct.destroy();
-    })
-    .then((result) => {
-      console.log("Product Deleted");
-      res.redirect("/admin/products");
-    })
-    .catch((err) => console.log(err));
+  Product.findByIdAndRemove(productID)
+  .then(() => {
+    res.redirect("/admin/products");
+  })
+  .catch((err) => console.log(err));
 };
 
 exports.addProductGet = (req, res, next) => {
@@ -40,7 +33,7 @@ exports.addProductGet = (req, res, next) => {
 
 /*Метод відловлює дані для додавання курсу */
 exports.addProductPost = (req, res, next) => {
-  console.log("addpost logs==========>>>>>>", req);
+  console.log("value product====>> ", req.body);
   const title = req.body.title;
   const price = req.body.price;
   const sale = req.body.sale;
@@ -51,54 +44,41 @@ exports.addProductPost = (req, res, next) => {
   const fullDescription = req.body.fullDescription;
   const brand = req.body.brand;
   const model = req.body.model;
-  const released = req.body.released;
-  const dimensions = req.body.dimensions;
-  const displaySize = req.body.displaySize;
   const features = req.body.features;
-
-  users.findByPk(1).then((data) => {
-    console.log("data from users====>>>>", data);
-    let userId = data.id;
-    console.log(userId)
-    return userId;
+  const product = new Product({
+    title: title,
+    price: price,
+    sale: sale,
+    imageUrl: imageUrl,
+    quantity: quantity,
+    color: color,
+    shortDescription: shortDescription, 
+    fullDescription: fullDescription,
+    brand: brand,
+    model: model,
+    features: features,
+    userId: req.user._id,
   });
-  console.log('userId====>>>>',userId);
-  /*За допомогою метода create передаємо в БД(Course) дані які ввів користувач в полях  */
   product
-    .create({
-      title: title,
-      price: price,
-      sale: sale,
-      imageUrl: imageUrl,
-      quantity: quantity,
-      color: color,
-      shortDescription: shortDescription,
-      fullDescription: fullDescription,
-      model: model,
-      brand: brand,
-      released: released,
-      dimensions: dimensions,
-      displaySize: displaySize,
-      features: features,
-      userId: userId,
-    })
+    .save()
     .then((result) => {
-      console.log("Add product result ==>>", result);
-      console.log("Product added");
+      console.log("Created Product");
       res.redirect("/admin/products");
     })
-    .catch((err) => console.log(err));
+    .catch((err) => {
+      console.log(err);
+    });
 };
 
 exports.getEditProduct = (req, res, next) => {
   console.log("Move to Edit Product Route");
   const id = req.params.id;
-  product
-    .findByPk(id)
+  Product
+    .findById(id)
     .then((product) => {
       res.render("admin/edit_product", {
         product: product,
-        time: new Date(),
+        // time: new Date(),
         // id: id,
         //path:'/products_edit/',
       });
@@ -107,10 +87,10 @@ exports.getEditProduct = (req, res, next) => {
 };
 
 exports.confirmEditProduct = (req, res, next) => {
-  console.log("Дані які прийшли з форми edit====>>>>", req.body);
+  // console.log("Дані які прийшли з форми edit====>>>>", req.body);
   const title = req.body.title;
   const id = req.body.id;
-  console.log("id---------->>>>>>>>>>>>>>", id);
+  // console.log("id---------->>>>>>>>>>>>>>", id);
   const price = req.body.price;
   const sale = req.body.sale;
   const imageUrl = req.body.imageUrl;
@@ -120,32 +100,30 @@ exports.confirmEditProduct = (req, res, next) => {
   const fullDescription = req.body.fullDescription;
   const brand = req.body.brand;
   const model = req.body.model;
-  const released = req.body.released;
   const dimensions = req.body.dimensions;
   const displaySize = req.body.displaySize;
   const features = req.body.features;
 
-  /*За допомогою метода update передаємо(обновлюємо) в таблиці(product) дані які ввів користувач в полях  */
-  product
-    .update(
-      {
-        title: title,
-        price: price,
-        sale: sale,
-        imageUrl: imageUrl,
-        quantity: quantity,
-        color: color,
-        shortDescription: shortDescription,
-        fullDescription: fullDescription,
-        model: model,
-        brand: brand,
-        released: released,
-        dimensions: dimensions,
-        displaySize: displaySize,
-        features: features,
-      },
-      { where: { id: id } }
-    )
+
+  const produpdate = Product.replaceOne({id},{
+    
+  title: title,
+  price: price,
+  sale: sale,
+  imageUrl: imageUrl,
+  quantity: quantity,
+  color: color,
+  shortDescription: shortDescription,
+  fullDescription: fullDescription,
+  model: model,
+  brand: brand,
+  dimensions: dimensions,
+  displaySize: displaySize,
+  features: features,
+  });
+  console.log("produpdate====>>>",produpdate);
+ 
+ produpdate.save()
     .then((result) => {
       console.log("Update product result ==>>", result);
       console.log("Product added");
@@ -171,9 +149,10 @@ exports.getUsers = (req, res, next) => {
 
 exports.getProductDetailPage = (req, res, next) => {
   const productID = req.params.id;
-  product
-    .findByPk(productID)
+  Product
+    .findById(productID)
     .then((dataproducts) => {
+      console.log('product detail===>>>',dataproducts)
       res.render("admin/admin_products_detail", {
         products: dataproducts,
         // pageTitle: "All products",

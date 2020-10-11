@@ -60,22 +60,10 @@
                             </div>
                           </div>
                         </form>
-                        
+                        <h5>Color: <%= products.color %> </h5>
                         <hr class="soft"/>
                         <h4><%= products.quantity %> шт.</h4>
-                        <!-- <form class="form-horizontal qtyFrm pull-right">
-                          <div class="control-group">
-                            <label class="control-label"><span>Color</span></label>
-                            <div class="controls">
-                              <select class="span2">
-                                  <option>Black</option>
-                                  <option>Red</option>
-                                  <option>Blue</option>
-                                  <option>Brown</option>
-                                </select>
-                            </div>
-                          </div>
-                        </form> -->
+                   
                         <hr class="soft clr"/>
                         <p>
                           <%= products.shortDescription %>
@@ -100,9 +88,7 @@
                         <tr class="techSpecRow"><th colspan="2">Product Details</th></tr>
                           <tr class="techSpecRow"><td class="techSpecTD1">Brand: </td><td class="techSpecTD2"><%= products.brand %></td></tr>
                         <tr class="techSpecRow"><td class="techSpecTD1">Model:</td><td class="techSpecTD2"><%= products.model %></td></tr>
-                        <tr class="techSpecRow"><td class="techSpecTD1">Released on:</td><td class="techSpecTD2"> <%= products.released %></td></tr>
-                        <tr class="techSpecRow"><td class="techSpecTD1">Dimensions:</td><td class="techSpecTD2"> <%= products.dimensions %></td></tr>
-                        <tr class="techSpecRow"><td class="techSpecTD1">Display size:</td><td class="techSpecTD2"><%= products.displaySize %></td></tr>
+                        
                         </tbody>
                         </table>
                         
