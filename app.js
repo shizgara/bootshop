@@ -9,7 +9,7 @@ const session = require("express-session");
 // Include Models
 const User = require("./models/users");
 
-const {DBUSERNAME, PASSWORD} = require("./helper/database");
+const {USERNAME, PASSWORD} = require("./helper/database");
 
 /*Ініціалізація порта і обєкта(сервера) app */
 const PORT = 8000;
@@ -53,7 +53,7 @@ app.use(errorController.get404);
 /*Тут прописане підключення до бази через mongoose */
 mongoose
   .connect(
-    `mongodb+srv://${DBUSERNAME}:${PASSWORD}@cluster0.cvhh2.mongodb.net/Bootshop?retryWrites=true&w=majority`,//Тут вводять пароль,пасворд і назва бд
+    `mongodb+srv://${USERNAME}:${PASSWORD}@cluster0.cvhh2.mongodb.net/Bootshop?retryWrites=true&w=majority`,//Тут вводять пароль,пасворд і назва бд
     { useNewUrlParser: true, useUnifiedTopology: true }
   )
   .then((result) => {
