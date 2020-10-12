@@ -53,7 +53,7 @@ app.use(errorController.get404);
 /*Тут прописане підключення до бази через mongoose */
 mongoose
   .connect(
-    `mongodb+srv://${DBUSERNAME}:${PASSWORD}@cluster0.cvhh2.mongodb.net/Bootshop?retryWrites=true&w=majority`,//Тут вводять пароль,пасворд і назва бд
+    `mongodb+srv://shizgara:shizgara123@cluster0.cvhh2.mongodb.net/Bootshop?retryWrites=true&w=majority`,//Тут вводять пароль,пасворд і назва бд
     { useNewUrlParser: true, useUnifiedTopology: true }
   )
   .then((result) => {
