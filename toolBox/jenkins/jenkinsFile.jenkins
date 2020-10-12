@@ -62,7 +62,7 @@ pipeline  {
                 echo " ============== starting chatterbox server =================="
                 withCredentials([usernamePassword(credentialsId: 'NoSql-DataBase-Credentials', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
                 sh '''
-                docker run -d -e DATABASENAME="Bootshop" -e USERNAME=$USERNAME -e PASSWORD=$PASSWORD --restart=always --name bootshop -p 80:8000 shizgara/bootshop
+                docker run -d -e DATABASENAME="Bootshop" -e USERNAME=$DBUSERNAME -e PASSWORD=$DBPASSWORD --restart=always --name bootshop -p 80:8000 shizgara/bootshop
                 '''
             }
             }
