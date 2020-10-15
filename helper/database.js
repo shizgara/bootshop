@@ -1,5 +1,5 @@
 // exports.Username = 'shizgara';
 // exports.Password = 'shizgara123';
 // exports.DataBase = 'Bootshop';
-exports.USERNAME = process.env.DBUSERNAME;
-exports.PASSWORD = process.env.DBPASSWORD;
+exports.DBUSERNAME = process.env.DBUSERNAME;
+exports.DBPASSWORD = process.env.DBPASSWORD;

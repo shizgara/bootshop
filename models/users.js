@@ -6,6 +6,10 @@ const userSchema = new Schema({
     type: String,
     required: true,
   },
+  password:{
+    type:String,
+    require:true,
+  },
   email: {
     type: String,
     required: true,
@@ -28,6 +32,7 @@ userSchema.methods.addToCart = function (product) {
   const cartProductIndex = this.cart.items.findIndex((cp) => {
     return cp.productId.toString() === product._id.toString();
   });
+  console.log('cartProductIndex===>>>',cartProductIndex)
   let newQuantity = 1;
   const updatedCartItems = [...this.cart.items];
 

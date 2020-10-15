@@ -1,51 +1,70 @@
 const Product = require("../models/product");
 const Order = require("../models/order");
 
+
 exports.getHomePage = (req, res, next) => {
-  // console.log("req==>>",req.isLoggedIn);
-  // console.log("REQ==>>",req);
+ 
+  // console.log("REQ session==>>",req.session);
+  // console.log("REQ session is loggedin==>>",req.session.isLoggedIn);
   Product
     .find()
-    .then((dataproducts) => {
+    .then((products) => {
       res.render("pages/home", {
-        products: dataproducts,
+        products: products,
         pageTitle: "All products",
         path: "pages/home",
+        isAuthenticated: req.session.isLoggedIn,// передаються дані про авторизацію ,тобто true або false
       });
     })
     .catch((err) => console.log(err));
 };
 
 exports.getContact = (req, res, next) => {
-  res.render("pages/contact");
+  res.render("pages/contact",{
+    isAuthenticated: req.session.isLoggedIn,
+  });
 };
 
 exports.getFaqPage = (req, res, next) => {
-  res.render("pages/faq");
+  res.render("pages/faq",{
+    isAuthenticated: req.session.isLoggedIn,
+  });
 };
 
 exports.getDeliveryPage = (req, res, next) => {
-  res.render("pages/delivery");
+  res.render("pages/delivery",{
+    isAuthenticated: req.session.isLoggedIn,
+  });
 };
 
 exports.getSpecialOfferPage = (req, res, next) => {
-  res.render("pages/special_offer");
+  res.render("pages/special_offer",{
+    isAuthenticated: req.session.isLoggedIn,
+  });
 };
 
 exports.getCompairPage = (req, res, next) => {
-  res.render("pages/compair");
+  res.render("pages/compair",{
+
+  });
 };
 
 exports.getComponentsPage = (req, res, next) => {
-  res.render("pages/components");
+  res.render("pages/components",{
+    isAuthenticated: req.session.isLoggedIn,
+  });
 };
 
 exports.getForgetPassPage = (req, res, next) => {
-  res.render("pages/forgetpass");
+  res.render("pages/forgetpass",{
+    isAuthenticated: req.session.isLoggedIn,
+  });
 };
 
 exports.getLegalNoticePage = (req, res, next) => {
-  res.render("pages/legal_notice");
+  res.render("pages/legal_notice",{
+    isAuthenticated: req.session.isLoggedIn,
+  });
 };
 
 exports.getLoginPage = (req, res, next) => {
@@ -59,6 +78,7 @@ exports.getProductDetailPage = (req, res, next) => {
     .then((dataproducts) => {
       res.render("pages/product_detail", {
         products: dataproducts,
+        isAuthenticated: req.session.isLoggedIn,
         // pageTitle: "All products",
         // path: "pages/product_detail",
       });
@@ -75,6 +95,7 @@ exports.getCart = (req, res, next) => {
     res.render("pages/product_summary", {
       path: "/product_summary",
       product: products,
+      isAuthenticated: req.session.isLoggedIn,
     });
   })
   .catch((err) => console.log(err));
@@ -88,7 +109,9 @@ exports.postCart = (req, res, next) => {
     })
     .then((result) => {
       console.log(result);
-      res.redirect("/cart");
+      res.redirect("/cart",{
+        isAuthenticated: req.session.isLoggedIn,
+      });
     });
 };
 
@@ -100,17 +123,22 @@ exports.getProductsPage = (req, res, next) => {
         products: dataproducts,
         pageTitle: "All products",
         path: "pages/products",
+        isAuthenticated: req.session.isLoggedIn,
       });
     })
     .catch((err) => console.log(err));
 };
 
 exports.getRegisterPage = (req, res, next) => {
-  res.render("pages/register");
+  res.render("pages/register",{
+    isAuthenticated: req.session.isLoggedIn,
+  });
 };
 
 exports.getTACPage = (req, res, next) => {
-  res.render("pages/tac");
+  res.render("pages/tac",{
+    isAuthenticated: req.session.isLoggedIn,
+  });
 };
 
 exports.getOrders = (req, res, next) => {
@@ -120,6 +148,7 @@ exports.getOrders = (req, res, next) => {
         path: "/orders",
         pageTitle: "Your Orders",
         orders: orders,
+        isAuthenticated: req.session.isLoggedIn,
       });
     })
     .catch((err) => console.log(err));
@@ -146,7 +175,9 @@ exports.postOrder = (req, res, next) => {
       return req.user.clearCart();
     })
     .then(() => {
-      res.redirect("/orders");
+      res.redirect("/orders",{
+        isAuthenticated: req.session.isLoggedIn,
+      });
     })
     .catch((err) => console.log(err));
 };
@@ -156,7 +187,9 @@ exports.postCartDeleteProduct = (req, res, next) => {
   req.user
     .removeFromCart(prodId)
     .then((result) => {
-      res.redirect("/cart");
+      res.redirect("/cart",{
+        isAuthenticated: req.session.isLoggedIn,
+      });
     })
     .catch((err) => console.log(err));
 };

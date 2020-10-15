@@ -199,13 +199,13 @@
 									<h4 style="text-align:center">
 												<a class="btn" href="/product_detail/<%= product.id %>"> Detail <i
 												class="icon-zoom-in"></i></a> 
-
+												<% if(isAuthenticated) { %>					
 												<form action="/product_summary" method="post">
 													<button class="btn" type="submit">Add to <i
 															class="icon-shopping-cart"></i></button>
 													<input type="hidden" name="productId" value="<%= product.id %>">
 												</form>
-												
+												<%}%>
 												<a class="btn btn-primary"
 											href="#"><%= product.price %> UAH</a></h4>
 								</div>

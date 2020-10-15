@@ -3,6 +3,7 @@
 const Product = require("../models/product");
 const users = require("../models/users");
 
+
 exports.getProducts = (req, res, next) => {
   Product
     .find()
@@ -11,6 +12,7 @@ exports.getProducts = (req, res, next) => {
       res.render("admin/products", {
         products: dataproducts,
         pageTitle: "All products",
+        isAuthenticated: req.session.isLoggedIn,
         // path: "/admin/products",
       });
     })
@@ -22,18 +24,22 @@ exports.deleteProduct = (req, res, next) => {
   const productID = req.params.id;
   Product.findByIdAndRemove(productID)
   .then(() => {
-    res.redirect("/admin/products");
+    res.redirect("/admin/products",{
+      isAuthenticated: req.session.isLoggedIn,
+    });
   })
   .catch((err) => console.log(err));
 };
 
 exports.addProductGet = (req, res, next) => {
-  res.render("admin/add-product");
+  res.render("admin/add-product",{
+    isAuthenticated: req.session.isLoggedIn,
+  });
 };
 
 /*Метод відловлює дані для додавання курсу */
 exports.addProductPost = (req, res, next) => {
-  console.log("value product====>> ", req.body);
+  // console.log("value product====>> ", req.body);
   const title = req.body.title;
   const price = req.body.price;
   const sale = req.body.sale;
@@ -63,7 +69,9 @@ exports.addProductPost = (req, res, next) => {
     .save()
     .then((result) => {
       console.log("Created Product");
-      res.redirect("/admin/products");
+      res.redirect("/admin/products",{
+        isAuthenticated: req.session.isLoggedIn,
+      });
     })
     .catch((err) => {
       console.log(err);
@@ -78,6 +86,7 @@ exports.getEditProduct = (req, res, next) => {
     .then((product) => {
       res.render("admin/edit_product", {
         product: product,
+        isAuthenticated: req.session.isLoggedIn,
         // time: new Date(),
         // id: id,
         //path:'/products_edit/',
@@ -103,34 +112,23 @@ exports.confirmEditProduct = (req, res, next) => {
   const dimensions = req.body.dimensions;
   const displaySize = req.body.displaySize;
   const features = req.body.features;
-
-
-  const produpdate = Product.replaceOne({id},{
-    
-  title: title,
-  price: price,
-  sale: sale,
-  imageUrl: imageUrl,
-  quantity: quantity,
-  color: color,
-  shortDescription: shortDescription,
-  fullDescription: fullDescription,
-  model: model,
-  brand: brand,
-  dimensions: dimensions,
-  displaySize: displaySize,
-  features: features,
-  });
-  console.log("produpdate====>>>",produpdate);
+  Product.findById(id).then((product)=>{
+    // console.log("produpdate====>>>",product);
+  })
+  .then((result) => {
+    // console.log("Update product result ==>>", result);
+    console.log("Product added");
+    res.redirect("/admin/products",{
+      isAuthenticated: req.session.isLoggedIn,
+    });
+  })
+  .catch((err) => console.log(err));
+  };
+  
  
- produpdate.save()
-    .then((result) => {
-      console.log("Update product result ==>>", result);
-      console.log("Product added");
-      res.redirect("/admin/products");
-    })
-    .catch((err) => console.log(err));
-};
+ 
+  
+
 
 exports.getUsers = (req, res, next) => {
   users
@@ -141,6 +139,7 @@ exports.getUsers = (req, res, next) => {
       res.render("admin/users", {
         user: data,
         pageTitle: "All users",
+        isAuthenticated: req.session.isLoggedIn,
         // path: "/admin/products",
       });
     })
@@ -152,9 +151,10 @@ exports.getProductDetailPage = (req, res, next) => {
   Product
     .findById(productID)
     .then((dataproducts) => {
-      console.log('product detail===>>>',dataproducts)
+      // console.log('product detail===>>>',dataproducts)
       res.render("admin/admin_products_detail", {
         products: dataproducts,
+        isAuthenticated: req.session.isLoggedIn,
         // pageTitle: "All products",
         // path: "pages/product_detail",
       });

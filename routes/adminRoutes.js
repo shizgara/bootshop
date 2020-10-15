@@ -3,17 +3,18 @@
 const express = require("express");
 const router = express.Router();
 const adminController = require("../controller/adminContreller");
+const auth = require("../helper/auth-helper")//Костиль який блокує доступ до адмін панелі без авторизації
 
 
-router.get("/products", adminController.getProducts);
-router.get('/products_delete/:id',adminController.deleteProduct);
-router.get('/edit_product/:id',adminController.getEditProduct);
-router.post('/product_editConfirm/:id',adminController.confirmEditProduct);
-router.get('/add-product',adminController.addProductGet);
-router.post('/add-product',adminController.addProductPost);
-router.get('/',adminController.getProducts);
-router.get("/users", adminController.getUsers);
-router.get("/admin_products_detail/:id", adminController.getProductDetailPage);
+router.get("/products",auth, adminController.getProducts);
+router.get('/products_delete/:id',auth,adminController.deleteProduct);
+router.get('/edit_product/:id',auth,adminController.getEditProduct);
+router.post('/product_editConfirm/:id',auth,adminController.confirmEditProduct);
+router.get('/add-product',auth,adminController.addProductGet);
+router.post('/add-product',auth,adminController.addProductPost);
+router.get('/',auth,adminController.getProducts);
+router.get("/users", auth,adminController.getUsers);
+router.get("/admin_products_detail/:id", auth,adminController.getProductDetailPage);
 
 
 module.exports = router;
