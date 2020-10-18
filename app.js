@@ -6,6 +6,10 @@ const mongoose = require("mongoose");
 const errorController = require("./controller/errorController");
 const session = require("express-session");//Підключення модуля для роботи з сесіями
 const mongoDBStroe = require("connect-mongodb-session")(session);//Підключення модуля для зберігання сесій в MongoDB
+const csrf = require("csurf");
+const nodemailer = require('nodemailer');
+const sgTransport = require('nodemailer-sendgrid-transport');
+
 
 // Include Models
 const User = require("./models/users");
@@ -24,6 +28,8 @@ const store = new mongoDBStroe({
   uri:MONGO_URL,
   collection: "sessions",
 })
+
+const csrfProtection = csrf();
 
 // Routes middleware
 const mainRoutes = require("./routes/mainRoutes");
@@ -45,9 +51,10 @@ app.use(session({
   resave: false, 
   saveUninitialized:false,//Змушує зберегти сеанс, який не ініціалізовано. Статус false. Економить місце  не сервері
   store:store,
-  cookie:{maxAge:false},// час тривалості сесії
+  cookie:{maxAge:6000000},// час тривалості сесії
 })
 );
+app.use(csrfProtection);
 app.use("/admin", express.static(__dirname + "/static"));
 app.use("/product_detail", express.static(path.join(__dirname, "static")));
 app.use(["/admin/edit_product", "/admin/admin_products_detail"],express.static(path.join(__dirname, "static")));
@@ -67,6 +74,13 @@ app.use((req, res, next) => {
     })
     .catch((err) => console.log(err));
 });
+
+app.use((req, res, next) => {
+  res.locals.isAuthenticated = req.session.isLoggedIn;
+  res.locals.csrfToken = req.csrfToken();
+  next();
+});
+
 
 //Routes
 app.use(mainRoutes);

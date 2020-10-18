@@ -12,7 +12,7 @@ exports.getProducts = (req, res, next) => {
       res.render("admin/products", {
         products: dataproducts,
         pageTitle: "All products",
-        isAuthenticated: req.session.isLoggedIn,
+        // isAuthenticated: req.session.isLoggedIn,
         // path: "/admin/products",
       });
     })
@@ -24,17 +24,13 @@ exports.deleteProduct = (req, res, next) => {
   const productID = req.params.id;
   Product.findByIdAndRemove(productID)
   .then(() => {
-    res.redirect("/admin/products",{
-      isAuthenticated: req.session.isLoggedIn,
-    });
+    res.redirect("/admin/products");
   })
   .catch((err) => console.log(err));
 };
 
 exports.addProductGet = (req, res, next) => {
-  res.render("admin/add-product",{
-    isAuthenticated: req.session.isLoggedIn,
-  });
+  res.render("admin/add-product");
 };
 
 /*Метод відловлює дані для додавання курсу */
@@ -69,9 +65,7 @@ exports.addProductPost = (req, res, next) => {
     .save()
     .then((result) => {
       console.log("Created Product");
-      res.redirect("/admin/products",{
-        isAuthenticated: req.session.isLoggedIn,
-      });
+      res.redirect("/admin/products");
     })
     .catch((err) => {
       console.log(err);
@@ -86,8 +80,6 @@ exports.getEditProduct = (req, res, next) => {
     .then((product) => {
       res.render("admin/edit_product", {
         product: product,
-        isAuthenticated: req.session.isLoggedIn,
-        // time: new Date(),
         // id: id,
         //path:'/products_edit/',
       });
@@ -119,7 +111,7 @@ exports.confirmEditProduct = (req, res, next) => {
     // console.log("Update product result ==>>", result);
     console.log("Product added");
     res.redirect("/admin/products",{
-      isAuthenticated: req.session.isLoggedIn,
+      // isAuthenticated: req.session.isLoggedIn,
     });
   })
   .catch((err) => console.log(err));
@@ -139,7 +131,7 @@ exports.getUsers = (req, res, next) => {
       res.render("admin/users", {
         user: data,
         pageTitle: "All users",
-        isAuthenticated: req.session.isLoggedIn,
+        // isAuthenticated: req.session.isLoggedIn,
         // path: "/admin/products",
       });
     })
@@ -154,7 +146,7 @@ exports.getProductDetailPage = (req, res, next) => {
       // console.log('product detail===>>>',dataproducts)
       res.render("admin/admin_products_detail", {
         products: dataproducts,
-        isAuthenticated: req.session.isLoggedIn,
+        // isAuthenticated: req.session.isLoggedIn,
         // pageTitle: "All products",
         // path: "pages/product_detail",
       });

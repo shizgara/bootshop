@@ -4,9 +4,7 @@ const bcrypt = require("bcryptjs");//Бібліотека для шифрува�
 
 exports.getLogin = (req,res,next)=>{
     // console.log("hetLogin===>>>",req.session.isLoggedIn);
-    res.render("pages/login",{
-        isAuthenticated: false,
-    });
+    res.render("pages/login");
 }
 
 exports.postLogin = (req, res, next) => {
@@ -24,7 +22,7 @@ exports.postLogin = (req, res, next) => {
             // console.log('match====>>>>',match)
             req.session.isLoggedIn = true;//Сесії присвоюєм сатус "залогінений"
             req.session.user = user;// Юзеру сесії присвоюємо значення юзера з БД
-            console.log('req.session.user====>>>>',req.session.user)
+            // console.log('req.session.user====>>>>',req.session.user)
             return req.session.save((err) => {//зберігаємо сесію
               res.redirect("/");
             });
@@ -36,9 +34,7 @@ exports.postLogin = (req, res, next) => {
   };
 
 exports.getRegister = (req,res,next)=>{
-    res.render("pages/register",{
-        isAuthenticated: false,
-    })
+    res.render("pages/register")
 }
 
 exports.postRegister = (req, res, next) => {
@@ -69,6 +65,6 @@ exports.postRegister = (req, res, next) => {
 
   exports.postLogout = (req,res,next)=>{
     // console.log('req.session===========>>>',req.session);
-    req.session.destroy(err=>console.log(err));//Методом destroy знищуємо активну сесію
+    req.session.destroy(err=>console.log('error logout===>>>',typeof(err)));//Методом destroy знищуємо активну сесію
     res.redirect("/")   
   }

@@ -11,6 +11,7 @@
                 <h3> Registration</h3>
                 <div class="well">
                     <form class="form-horizontal" action="/register" method="POST">
+                        <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
                         <h4>Your personal information</h4>
                         <div class="control-group">
                             <label class="control-label" for="inputFname1">Username <sup>*</sup></label>

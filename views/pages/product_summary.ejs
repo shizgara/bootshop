@@ -27,6 +27,7 @@
                           <th>Description</th>
                           <th>Quantity/Update</th>
                           <th>Price</th>
+                         
                           <th>Discount</th>
                           <th>Total</th>
                         </tr>
@@ -35,15 +36,16 @@
                       <tbody>
                         <tr>
                           <td> <img width="60" src="<%= productItem.productId.imageUrl %>"
-                            alt="<%= product[0].title %>" /></td>
+                            alt="<%= productItem.productId.title %>" /></td>
                     <td><%= productItem.productId.shortDescription %></td>
                     <td>
                         <div class="input-append"><input class="span1" style="max-width:34px"
-                                value="<%= productItem.productId.quantity %>" id="appendedInputButtons"
+                                value="<%= productItem.quantity %>" id="appendedInputButtons"
                                 size="16" type="text"><button class="btn" type="button"><i
                                     class="icon-minus"></i></button><button class="btn" type="button"><i
                                     class="icon-plus"></i></button>
                             <form action="/cart-delete-item" method="POST">
+                              <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
                                 <input type="hidden" value="<%= productItem.productId._id %>" name="productId">
                                 <button class="btn danger" type="submit"><i
                                         class="icon-remove icon-red"></i></button>
@@ -51,8 +53,13 @@
                         </div>
                     </td>
                     <td><%= productItem.productId.price %></td>
+                    <% if(productItem.productId.sale) { %>
                     <td><%= productItem.productId.sale %></td>
-                    <td><%= productItem.productId.sale *  productItem.productId.quantity %></td>
+                    <td><%= (productItem.productId.price * productItem.quantity) - productItem.productId.sale %></td>
+                    <%}else{%>
+                      <td></td>
+                      <td><%= productItem.productId.price * productItem.quantity %></td>
+                      <%}%>
                         </tr>
                         <%})} else {%>
                           <h2>No product found</h2>
@@ -61,6 +68,7 @@
                     </table>
                     
                     <form action="/make-order" method="POST">
+                      <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
                       <button type="submit" class="btn btn-large pull-right">Order now <i
                               class="fas fa-shopping-cart"></i></button>
                   </form>  

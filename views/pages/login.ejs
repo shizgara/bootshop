@@ -20,6 +20,7 @@
                     <div class="well">
                     <h5>ALREADY REGISTERED ?</h5>
                     <form action="/login" method="post">
+                      <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
                       <div class="control-group">
                         <label class="control-label" for="inputEmail1">Email</label>
                         <div class="controls">

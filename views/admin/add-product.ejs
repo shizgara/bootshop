@@ -9,6 +9,7 @@
   <div class="row mb-4 mt-4">
     <div class="col">
       <form method="POST" action="/admin/add-product">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
           <div class="form-group">
           <label for="title">Title</label>
           <input

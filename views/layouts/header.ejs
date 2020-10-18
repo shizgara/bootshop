@@ -80,7 +80,7 @@
 	 <li class=""><a href="/delivery">Delivery</a></li>
 	 <li class=""><a href="/contact">Contact</a></li>
 	 <% if(isAuthenticated) { %>
-	 <li class=""><a href="/product_sumarry">Cart</a></li>
+	 <li class=""><a href="/cart">Cart</a></li>
 	 <li class=""><a href="/orders">Orders</a></li>
 	 <%}%>
 	 <% if(!isAuthenticated) { %>
@@ -88,7 +88,8 @@
 	 <%}%>
 	 <li class="">
 		<% if(isAuthenticated) { %>
-			<form action="logout" method="post">
+			<form action="/logout" method="post">
+				<input type="hidden" name="_csrf" value="<%= csrfToken %>" />
 				<button type="submit">Logout</button>
 			</form>
 	 <%}else{%>

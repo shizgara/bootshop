@@ -45,20 +45,21 @@
                         <h3><%= products.title %>  </h3>
                         <small>- <%= products.shortDescription %></small>
                         <hr class="soft"/>
-                        <form class="form-horizontal qtyFrm">
+                         class="form-horizontal qtyFrm">
                           <div class="control-group">
                             <label class="control-label"><span><%= products.price %> UAH</span></label>
                             <div class="controls">
                             <input type="number" class="span1" placeholder="Qty."/>
                             <% if(isAuthenticated) { %>	
-                          <form action="/product_summary" method="post"></form>
+                          <form action="/cart" method="post">
+                          <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
                               <button type="submit" class="btn btn-large btn-primary pull-right"> Add to cart <i class=" icon-shopping-cart"></i></button>
                               <input type="hidden" name="productId" value="<%= products.id %>">
                           </form>
                           <%}%>
                             </div>
                           </div>
-                        </form>
+                        
                         <h5>Color: <%= products.color %> </h5>
                         <hr class="soft"/>
                         <h4><%= products.quantity %> шт.</h4>
