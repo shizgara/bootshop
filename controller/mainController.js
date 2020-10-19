@@ -1,16 +1,12 @@
 const Product = require("../models/product");
 const Order = require("../models/order");
 const nodemailer = require('nodemailer');
-const sgTransport = require('nodemailer-sendgrid-transport');
 const User = require("../models/users")
 const fs = require("fs");
 
 
 
 exports.getHomePage = (req, res, next) => {
- 
-  // console.log("REQ session==>>",req.session);
-  // console.log("REQ session is loggedin==>>",req.session.isLoggedIn);
   Product
     .find()
     .then((products) => {
@@ -18,49 +14,46 @@ exports.getHomePage = (req, res, next) => {
         products: products,
         pageTitle: "All products",
         path: "pages/home",
-        
-      });
-    })
-    .catch((err) => console.log(err));
+       });
+    }).catch((err) => console.log(err));
 };
 
 exports.getContact = (req, res, next) => {
-  res.render("pages/contact",);
+  res.render("pages/contact");
 };
 
 exports.getFaqPage = (req, res, next) => {
-  res.render("pages/faq",);
+  res.render("pages/faq");
 };
 
 exports.getDeliveryPage = (req, res, next) => {
-  res.render("pages/delivery",);
+  res.render("pages/delivery");
 };
 
 exports.getSpecialOfferPage = (req, res, next) => {
-  res.render("pages/special_offer",);
+  res.render("pages/special_offer");
 };
 
 exports.getCompairPage = (req, res, next) => {
-  res.render("pages/compair",{
-
-  });
+  res.render("pages/compair");
 };
 
 exports.getComponentsPage = (req, res, next) => {
-  res.render("pages/components",);
+  res.render("pages/components");
 };
 
 exports.getForgetPassPage = (req, res, next) => {
-  res.render("pages/forgetpass",);
+  res.render("pages/forgetpass");
 };
 
 exports.getLegalNoticePage = (req, res, next) => {
-  res.render("pages/legal_notice",);
+  res.render("pages/legal_notice");
 };
 
 exports.getLoginPage = (req, res, next) => {
   res.render("pages/login");
 };
+
 
 exports.getProductDetailPage = (req, res, next) => {
   const productID = req.params.id;
@@ -69,13 +62,10 @@ exports.getProductDetailPage = (req, res, next) => {
     .then((dataproducts) => {
       res.render("pages/product_detail", {
         products: dataproducts,
-        
-        // pageTitle: "All products",
-        // path: "pages/product_detail",
       });
-    })
-    .catch((err) => console.log(err));
+    }).catch((err) => console.log(err));
 };
+
 
 exports.getCart = (req, res, next) => {
   req.user
@@ -92,6 +82,7 @@ exports.getCart = (req, res, next) => {
   .catch((err) => console.log(err));
 };
 
+
 exports.postCart = (req, res, next) => {
   const prodId = req.body.productId;
   Product.findById(prodId)
@@ -99,8 +90,7 @@ exports.postCart = (req, res, next) => {
     return req.user.addToCart(product);
     })
     .then((result) => {
-      // console.log(result);
-      res.redirect("/cart");
+     res.redirect("/cart");
     });
 
 };
@@ -113,16 +103,12 @@ exports.getProductsPage = (req, res, next) => {
         products: dataproducts,
         pageTitle: "All products",
         path: "pages/products",
-        
-      });
-    })
-    .catch((err) => console.log(err));
+        });
+    }).catch((err) => console.log(err));
 };
 
 exports.getRegisterPage = (req, res, next) => {
-  res.render("pages/register",{
-    // isAuthenticated: req.session.isLoggedIn,
-  });
+  res.render("pages/register");
 };
 
 exports.getTACPage = (req, res, next) => {
@@ -130,17 +116,16 @@ exports.getTACPage = (req, res, next) => {
 };
 
 exports.getOrders = (req, res, next) => {
-  Order.find({ "user.userId": req.user._id })
+  Order.find({ "user.userId": req.user._id })//Знаходимо в колеції Order за допомогою методо find всі замовлення даного користувача. Виборку робимо по полю user.userId, яке є в будь-якогому замовленні. req.user._id - це id залогіненого користувача
     .then((orders) => {
       res.render("pages/orders", {
         path: "/orders",
         pageTitle: "Your Orders",
         orders: orders,
-        
-      });
-    })
-    .catch((err) => console.log(err));
+        });
+    }).catch((err) => console.log(err));
 };
+
 
 exports.postOrder = (req, res, next) => {
  
@@ -174,7 +159,7 @@ exports.postOrder = (req, res, next) => {
 
         function html() {
           let total = 0;
-          let html = `<h3><span style="color:#000">You make an order ${req.user.name}</span></h3>`;
+          let html = ``;
           for (let product of products) {
               total += product.product.price * product.quantity;
               if(!product.product.sale){
@@ -207,6 +192,8 @@ exports.postOrder = (req, res, next) => {
                       </style>
               </head>
               <body>
+                    <h3><span style="color:#000">You make an order ${req.user.name}</span></h3>
+                    
                    <table class="table table-bordered" style="border: 1px solid #ddd;border-collapse: separate;width: 100%;
                      margin-bottom: 20px;font-size: 13px;">
                   <thead>

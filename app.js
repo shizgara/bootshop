@@ -6,9 +6,9 @@ const mongoose = require("mongoose");
 const errorController = require("./controller/errorController");
 const session = require("express-session");//Підключення модуля для роботи з сесіями
 const mongoDBStroe = require("connect-mongodb-session")(session);//Підключення модуля для зберігання сесій в MongoDB
-const csrf = require("csurf");
-const nodemailer = require('nodemailer');
-const sgTransport = require('nodemailer-sendgrid-transport');
+const csrf = require("csurf");// Бібліотека для блокування csrf атак. Атака через заповнення form
+const nodemailer = require('nodemailer');// почтоий клієнт
+const sgTransport = require('nodemailer-sendgrid-transport');// Транспорт для почтового клієнта через лівий сервіс sendgrid
 
 
 // Include Models
@@ -29,7 +29,7 @@ const store = new mongoDBStroe({
   collection: "sessions",
 })
 
-const csrfProtection = csrf();
+const csrfProtection = csrf();//Ініціалізація бібліотеки csrf
 
 // Routes middleware
 const mainRoutes = require("./routes/mainRoutes");
@@ -54,12 +54,12 @@ app.use(session({
   cookie:{maxAge:6000000},// час тривалості сесії
 })
 );
-app.use(csrfProtection);
+app.use(csrfProtection);// Підключення сsrf як middleware
 app.use("/admin", express.static(__dirname + "/static"));
 app.use("/product_detail", express.static(path.join(__dirname, "static")));
 app.use(["/admin/edit_product", "/admin/admin_products_detail"],express.static(path.join(__dirname, "static")));
 
-/*Присвоюємо змінній req.user дані про юзера під id №1*/
+/*Присвоюємо змінній req.user дані про юзера під id */
 app.use((req, res, next) => {
   if(!req.session.user){//Перевірка чи присутня дана зміна(req.session.user), тобто чи юзер залогінений
     // console.log("req.session.user====>>>",req.session.user)
@@ -75,9 +75,10 @@ app.use((req, res, next) => {
     .catch((err) => console.log(err));
 });
 
+//Створюємо middlewear де в глобальну змінну res.locals, яка буде передаватись по всьому app, передаємо ключ токена і статус залогіненого користувача
 app.use((req, res, next) => {
-  res.locals.isAuthenticated = req.session.isLoggedIn;
-  res.locals.csrfToken = req.csrfToken();
+  res.locals.isAuthenticated = req.session.isLoggedIn;// В змінну запиється значення true коли користувач залогінений
+  res.locals.csrfToken = req.csrfToken();//Тут передається сам token(ключ), який формується за допомогою функції csrfToken(). Дану змінну передаємо прихованим ключем у всі form нашого app. Це вже робиться в ejs
   next();
 });
 
@@ -96,7 +97,7 @@ mongoose
     { useNewUrlParser: true, useUnifiedTopology: true }
   )
   .then((result) => {
-    User.findOne().then((user) => {
+    User.findOne().then((user) => {//Це  seed для створення одного користувача
       if (!user) {
         const user = new User({
           name: "master",

@@ -9,20 +9,15 @@ exports.getLogin = (req,res,next)=>{
 
 exports.postLogin = (req, res, next) => {
     const { email, password } = req.body;// Отримуємо в змінн дані з форми(email,password)
-    // console.log('email===>',email, 'password===>>>', password);
-    // console.log("BODY===>>",req.body)
     User.findOne({ email: email })//Перевірка в БД чи є даний юзер з таким email
       .then((user) => {
-        // console.log(user)
-        if (!user) {
+           if (!user) {
           return res.redirect("/login");// якщо по емейлу не знаходить такого юзера робить редірект на сторінку login
         }
         bcrypt.compare(password, user.password).then((match) => {//Перевірка чи співпадає пароль введений з хешованим в базі. Тут повертає значення true або false
           if (match) {
-            // console.log('match====>>>>',match)
             req.session.isLoggedIn = true;//Сесії присвоюєм сатус "залогінений"
             req.session.user = user;// Юзеру сесії присвоюємо значення юзера з БД
-            // console.log('req.session.user====>>>>',req.session.user)
             return req.session.save((err) => {//зберігаємо сесію
               res.redirect("/");
             });
@@ -64,7 +59,6 @@ exports.postRegister = (req, res, next) => {
   };
 
   exports.postLogout = (req,res,next)=>{
-    // console.log('req.session===========>>>',req.session);
     req.session.destroy(err=>console.log('error logout===>>>',typeof(err)));//Методом destroy знищуємо активну сесію
     res.redirect("/")   
   }
